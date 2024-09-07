@@ -73,4 +73,4 @@ This project is open source and available under the [MIT License](LICENSE).
 ## Contact
 
 Jonathan Rycx
-https://www.linkedin.com/in/jonathanrycx/
+https://www.linkedin.com/in/jonathanrycx/# url-shortener
