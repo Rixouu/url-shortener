@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Short URL</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <h1>ZipLink</h1>
+            <div class="card">
+                <h2>Paste the URL to be shortened</h2>
+                <form id="url-form">
+                    <div class="input-group">
+                        <input type="url" name="url" id="url-input" placeholder="Enter your long URL here" required>
+                        <button type="submit">Shorten URL</button>
+                    </div>
+                </form>
+                <p class="description">ShortURL is a free tool to shorten URLs and generate short links</p>
+                <p class="description">URL shortener allows to create a shortened link making it easy to share</p>
+            </div>
+            <div id="result" class="result hidden">
+                <h2>Your shortened URL:</h2>
+                <div class="short-url-container">
+                    <a id="short-url" href="#" target="_blank"></a>
+                    <button id="copy-btn" onclick="copyToClipboard()">Copy</button>
+                </div>
+            </div>
+        </div>
+        <div class="additional-info">
+            <h3>Shorten, Share, Succeed</h3>
+            <p>Transform lengthy URLs into sleek, shareable links in seconds. ZipLink is your go-to tool for creating compact, powerful links that make an impact across all your online channels.</p>
+            
+            <h3>Why Choose ZipLink?</h3>
+            <p>Our URL shortener offers unparalleled versatility and efficiency. With universal compatibility, you can streamline links from any platform, including Instagram, Facebook, YouTube, Twitter, LinkedIn, WhatsApp, TikTok, and more.</p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
