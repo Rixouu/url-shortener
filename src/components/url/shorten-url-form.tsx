@@ -15,7 +15,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const urlFormSchema = z.object({
@@ -36,7 +36,22 @@ interface ShortenUrlFormProps {
 export function ShortenUrlForm({ onSuccess }: ShortenUrlFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [lastResult, setLastResult] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const router = useRouter();
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      toast("Success", {
+        description: "Link copied to clipboard!",
+      });
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
 
   const form = useForm<UrlFormValues>({
     resolver: zodResolver(urlFormSchema),
@@ -72,7 +87,10 @@ export function ShortenUrlForm({ onSuccess }: ShortenUrlFormProps) {
       }
 
       const result = await response.json();
-      toast(`Your shortened URL is ready: ${window.location.origin}/${result.shortCode}`, {
+      const shortUrl = `${window.location.origin}/${result.shortCode}`;
+      setLastResult(shortUrl);
+      
+      toast(`Your shortened URL is ready: ${shortUrl}`, {
         description: "URL successfully shortened!",
       });
 
@@ -248,6 +266,30 @@ export function ShortenUrlForm({ onSuccess }: ShortenUrlFormProps) {
             </Button>
           </form>
         </Form>
+
+        {lastResult && (
+          <div className="mt-6 animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Short Link</span>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-8 px-2 text-primary hover:text-primary/80 hover:bg-primary/10 transition-colors"
+                  onClick={() => copyToClipboard(lastResult)}
+                >
+                  {copied ? <Check className="size-4 mr-2" /> : <Copy className="size-4 mr-2" />}
+                  {copied ? 'Copied' : 'Copy'}
+                </Button>
+              </div>
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm">
+                <div className="flex-1 font-mono text-sm text-primary truncate">
+                  {lastResult}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
