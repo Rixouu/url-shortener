@@ -4,9 +4,9 @@
 
 The project is built with a focus on speed, reliability, and an exceptional "WOW" user experience, featuring a fully optimized Progressive Web App (PWA) setup.
 
-[![Next.js 15](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-blue)](https://www.typescriptlang.org/)
 [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind-4-38bdf8)](https://tailwindcss.com/)
 [![PWA Ready](https://img.shields.io/badge/PWA-Install%20Banner-FF5722)](https://web.dev/progressive-web-apps/)
 
@@ -38,14 +38,14 @@ The project is built with a focus on speed, reliability, and an exceptional "WOW
 
 ### Frontend
 - **React 19**
-- **Next.js 15** (App Router)
+- **Next.js 16** (App Router & Turbopack)
 - **Tailwind CSS 4** (Vibrant orange theme)
 - **Lucide React** for premium iconography
 - **Shadcn UI** for accessible components
 - **Sonner** for elegant toast notifications
 
 ### Infrastructure & Tooling
-- **Next.js 15 Build Worker** for optimized production builds
+- **Next.js 16 Turbopack** for blazing fast production builds
 - **ImageMagick** for automated PWA asset generation
 - **Zod** for data integrity
 
@@ -89,7 +89,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 ```txt
 url-shortener/
 ├── src/
-│   ├── app/                # Next.js 15 App Router (Pages & API)
+│   ├── app/                # Next.js 16 App Router (Pages & API)
 │   ├── components/         # UI Components (Shadcn, PWA Banner, Form)
 │   ├── hooks/              # Custom React hooks (usePWA)
 │   ├── lib/                # Core logic (URL service, storage, utils)
@@ -131,8 +131,9 @@ chmod +x scripts/generate-assets.sh
 - **Theme Color**: Signature `#FF5722` integrated into manifest and viewport settings.
 
 ## 📊 Performance & SEO
-- **Next.js 15 SSR**: Fast initial page loads and SEO-friendly redirects.
-- **Viewport Optimization**: Strict adherence to Next.js 15 viewport metadata standards.
+- **Next.js 16 SSR**: Fast initial page loads and SEO-friendly redirects.
+- **Turbopack Stable**: Dramatic reduction in build times and enhanced dev performance.
+- **Viewport Optimization**: Strict adherence to Next.js 16 viewport metadata standards.
 - **Resource Efficiency**: Optimized build traces and shared JS chunks.
 
 ---
