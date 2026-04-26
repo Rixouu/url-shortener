@@ -8,6 +8,8 @@ interface RouteParams {
   }>;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function RedirectPage({ params }: RouteParams) {
   const { code } = await params;
   const headersList = await headers();

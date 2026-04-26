@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 const urlFormSchema = z.object({
   url: z.string().url({ message: 'Please enter a valid URL' }),
   customCode: z.string().optional(),
-  useCustomCode: z.boolean().default(false),
+  useCustomCode: z.boolean(),
   title: z.string().optional(),
   description: z.string().optional(),
   expiresAt: z.date().optional(),
