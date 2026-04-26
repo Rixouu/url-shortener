@@ -4,9 +4,9 @@ import { ShortUrl } from './types';
 interface ClickEvent {
   id: string;
   short_url_id: string;
-  referrer: string | null;
-  user_agent: string | null;
-  ip_address: string | null;
+  referrer?: string;
+  user_agent?: string;
+  ip_address?: string;
   created_at: string;
 }
 
@@ -34,12 +34,12 @@ export async function createShortUrl(url: string, customCode?: string, title?: s
       id: nanoid(),
       url,
       short_code: shortCode,
-      title: title || null,
-      description: description || null,
+      title: title || undefined,
+      description: description || undefined,
       clicks: 0,
-      user_id: null,
+      user_id: undefined,
       is_custom: !!customCode,
-      expires_at: expiresAt ? expiresAt.toISOString() : null,
+      expires_at: expiresAt ? expiresAt.toISOString() : undefined,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
@@ -74,9 +74,9 @@ export async function recordClick(shortUrlId: string, referrer?: string, userAge
       clickEvents.push({
         id: nanoid(),
         short_url_id: shortUrlId,
-        referrer: referrer || null,
-        user_agent: userAgent || null,
-        ip_address: ipAddress || null,
+        referrer: referrer || undefined,
+        user_agent: userAgent || undefined,
+        ip_address: ipAddress || undefined,
         created_at: new Date().toISOString()
       });
     }

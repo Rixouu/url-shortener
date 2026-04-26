@@ -3,14 +3,14 @@ import { getShortUrl, recordClick } from '@/lib/url-service';
 import { headers } from 'next/headers';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     code: string;
-  };
+  }>;
 }
 
 export default async function RedirectPage({ params }: RouteParams) {
-  const { code } = params;
-  const headersList = headers();
+  const { code } = await params;
+  const headersList = await headers();
   const userAgent = headersList.get('user-agent');
   const referer = headersList.get('referer');
   

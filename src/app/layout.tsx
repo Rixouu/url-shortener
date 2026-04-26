@@ -13,6 +13,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  themeColor: "#FF5722",
+};
+
 export const metadata: Metadata = {
   title: "Link Code Editor",
   description: "Create short, memorable links for your URLs",
@@ -21,7 +25,6 @@ export const metadata: Metadata = {
     icon: "/favicon.png",
     apple: "/apple-touch-icon.png",
   },
-  themeColor: "#FF5722",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
