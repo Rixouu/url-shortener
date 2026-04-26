@@ -1,10 +1,19 @@
 import { nanoid } from 'nanoid';
 import { ShortUrl } from './types';
 
+interface ClickEvent {
+  id: string;
+  short_url_id: string;
+  referrer: string | null;
+  user_agent: string | null;
+  ip_address: string | null;
+  created_at: string;
+}
+
 // In-memory store for URLs and click events
 // Note: This will reset when the server restarts.
 const urls: Map<string, ShortUrl> = new Map();
-const clickEvents: any[] = [];
+const clickEvents: ClickEvent[] = [];
 
 // Generate a random short code
 export function generateShortCode(length: number = 6): string {
