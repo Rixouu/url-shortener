@@ -36,7 +36,7 @@ export function PWAInstallBanner() {
           {isIOS ? (
             <div className="flex flex-col items-center gap-1 text-[10px] text-zinc-500">
               <div className="flex items-center gap-1">
-                <span>Tap</span> <Share size={14} className="text-primary" /> <span>then "Add to Home Screen"</span>
+                <span>Tap</span> <Share size={14} className="text-primary" /> <span>then &quot;Add to Home Screen&quot;</span>
               </div>
             </div>
           ) : (
