@@ -27,7 +27,7 @@ export function PWAInstallBanner() {
             <Download size={24} />
           </div>
           <div>
-            <h3 className="font-bold text-zinc-900 dark:text-zinc-100">Install LinkCode</h3>
+            <h3 className="font-bold text-zinc-900 dark:text-zinc-100">Install URL Shortener</h3>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">Add to home screen for the best experience</p>
           </div>
         </div>

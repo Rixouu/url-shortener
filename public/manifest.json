@@ -1,6 +1,6 @@
 {
-  "name": "Link Code Editor",
-  "short_name": "LinkCode",
+  "name": "URL Shortener",
+  "short_name": "URLShortener",
   "description": "Create short, memorable links for your URLs",
   "start_url": "/",
   "display": "standalone",

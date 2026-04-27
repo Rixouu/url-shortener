@@ -1,6 +1,6 @@
-# 🔗 Link Code Editor
+# 🔗 URL Shortener
 
-**Link Code Editor** is a premium, modern URL shortener and link management platform. Create short, memorable links with ease, track detailed click analytics, and manage your digital presence through a sleek, high-performance PWA interface.
+**URL Shortener** is a premium, modern URL shortener and link management platform. Create short, memorable links with ease, track detailed click analytics, and manage your digital presence through a sleek, high-performance PWA interface.
 
 The project is built with a focus on speed, reliability, and an exceptional "WOW" user experience, featuring a fully optimized Progressive Web App (PWA) setup.
 

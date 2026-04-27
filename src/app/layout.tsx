@@ -18,7 +18,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Link Code Editor",
+  title: "URL Shortener",
   description: "Create short, memorable links for your URLs",
   manifest: "/manifest.json",
   icons: {
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "LinkCode",
+    title: "URLShortener",
   },
 };
 

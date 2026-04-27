@@ -27,7 +27,7 @@ export default function Home() {
               <rect x="281" y="281" width="23" height="23" fill="white"/>
             </svg>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-3">Link Code Editor</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-3">URL Shortener</h1>
           <p className="text-zinc-500 dark:text-zinc-400 max-w-sm">Create short, memorable links with premium analytics and management tools.</p>
         </div>
         

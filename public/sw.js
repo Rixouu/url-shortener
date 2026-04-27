@@ -1,4 +1,4 @@
-const CACHE_NAME = 'linkcode-cache-v1';
+const CACHE_NAME = 'url-shortener-cache-v1';
 const urlsToCache = [
   '/',
   '/manifest.json',
