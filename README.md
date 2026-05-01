@@ -21,6 +21,10 @@ The project is built with a focus on speed, reliability, and an exceptional "WOW
 - **Audience Insights**: Capture referrer data and user agent information.
 - **Performance Metrics**: High-performance data retrieval for link statistics.
 
+### 🧾 QR Codes
+- **QR Generation**: Auto-generate a QR code for every short link.
+- **Downloadable**: Download QR codes as PNGs for sharing and print.
+
 ### 📱 Premium PWA & Mobile UX
 - **Installable Anywhere**: Dedicated **PWA Install Banner** for Chrome and iOS.
 - **Native Feel**: Custom splash screens and app icons optimized for all mobile devices.
@@ -115,6 +119,12 @@ npm run start            # Start production server
 npm run lint             # Run ESLint check
 ```
 
+### Unit Tests
+```bash
+npm run test             # Run unit tests once (CI mode)
+npm run test:watch       # Watch mode
+```
+
 ### Asset Generation
 The project includes a custom methodology for generating high-fidelity PWA assets directly from a single source icon:
 ```bash
@@ -129,6 +139,13 @@ chmod +x scripts/generate-assets.sh
 - **Install Banner**: Custom component logic for handling the `beforeinstallprompt` and iOS "Add to Home Screen" instructions.
 - **Splash Screens**: Automated generation of 8+ iOS splash screen sizes to ensure a premium launch experience.
 - **Theme Color**: Signature `#FF5722` integrated into manifest and viewport settings.
+
+## 🔌 API Endpoints
+- `POST /api/url/shorten`: Create a short URL (supports optional `customCode`, `title`, `description`, `expiresAt`).
+- `GET /api/url/[code]/stats`: Fetch click count + recent click events for a short code.
+
+## 🧠 Notes
+- Storage is in-memory for now. Restarting the server clears links and analytics.
 
 ## 📊 Performance & SEO
 - **Next.js 16 SSR**: Fast initial page loads and SEO-friendly redirects.

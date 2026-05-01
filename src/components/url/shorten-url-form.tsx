@@ -390,7 +390,7 @@ export function ShortenUrlForm({ onSuccess, variant = 'card' }: ShortenUrlFormPr
             </div>
 
             {variant === 'panel' && (
-              <div className="mt-4 hidden md:grid grid-cols-2 gap-4">
+              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="rounded-2xl border border-border bg-card p-4">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm font-medium">QR code</p>
@@ -406,7 +406,7 @@ export function ShortenUrlForm({ onSuccess, variant = 'card' }: ShortenUrlFormPr
                   </div>
                   <div className="mt-3 flex items-center justify-center rounded-xl border border-border bg-white p-4">
                     {qrDataUrl ? (
-                      <img src={qrDataUrl} alt="QR code" className="h-40 w-40" />
+                      <img src={qrDataUrl} alt="QR code" className="h-44 w-44 md:h-40 md:w-40" />
                     ) : (
                       <div className="text-sm text-muted-foreground">Generating…</div>
                     )}
