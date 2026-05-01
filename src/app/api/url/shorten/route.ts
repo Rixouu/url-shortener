@@ -44,7 +44,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       shortCode: shortUrl.short_code,
       url: shortUrl.url,
-      id: shortUrl.id 
+      id: shortUrl.id,
+      expiresAt: shortUrl.expires_at ?? null,
     });
     
   } catch (error) {

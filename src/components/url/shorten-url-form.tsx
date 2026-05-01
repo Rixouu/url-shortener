@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -14,9 +14,11 @@ import { useRouter } from 'next/navigation';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { format } from 'date-fns';
+import { format, formatDistanceToNowStrict } from 'date-fns';
 import { ArrowRight, CalendarIcon, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import QRCode from 'qrcode';
+import type { ClickEvent } from '@/lib/types';
 
 const urlFormSchema = z.object({
   url: z.string().url({ message: 'Please enter a valid URL' }),
@@ -30,15 +32,26 @@ const urlFormSchema = z.object({
 type UrlFormValues = z.infer<typeof urlFormSchema>;
 
 interface ShortenUrlFormProps {
-  onSuccess?: (data: { shortCode: string; url: string }) => void;
+  onSuccess?: (data: { id: string; shortCode: string; url: string; expiresAt: string | null }) => void;
   variant?: 'card' | 'panel';
 }
 
 export function ShortenUrlForm({ onSuccess, variant = 'card' }: ShortenUrlFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastResult, setLastResult] = useState<string | null>(null);
+  const [lastShortCode, setLastShortCode] = useState<string | null>(null);
+  const [lastExpiresAt, setLastExpiresAt] = useState<string | null>(null);
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [stats, setStats] = useState<{ clicks: number; clickEvents: ClickEvent[] } | null>(null);
   const [copied, setCopied] = useState(false);
   const router = useRouter();
+
+  const fetchStats = async (code: string) => {
+    const res = await fetch(`/api/url/${encodeURIComponent(code)}/stats?limit=10`);
+    if (!res.ok) return;
+    const json = await res.json();
+    setStats({ clicks: json.clicks ?? 0, clickEvents: json.clickEvents ?? [] });
+  };
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -63,6 +76,41 @@ export function ShortenUrlForm({ onSuccess, variant = 'card' }: ShortenUrlFormPr
       description: '',
     },
   });
+
+  useEffect(() => {
+    if (!lastResult) {
+      setQrDataUrl(null);
+      return;
+    }
+
+    let cancelled = false;
+    QRCode.toDataURL(lastResult, {
+      margin: 1,
+      width: 256,
+      color: { dark: '#0F172A', light: '#FFFFFF' },
+    })
+      .then((dataUrl: string) => {
+        if (!cancelled) setQrDataUrl(dataUrl);
+      })
+      .catch(() => {
+        if (!cancelled) setQrDataUrl(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [lastResult]);
+
+  useEffect(() => {
+    if (!lastShortCode) {
+      setStats(null);
+      return;
+    }
+
+    fetchStats(lastShortCode);
+    const timer = setInterval(() => fetchStats(lastShortCode), 5000);
+    return () => clearInterval(timer);
+  }, [lastShortCode]);
 
   async function onSubmit(data: UrlFormValues) {
     setIsSubmitting(true);
@@ -89,13 +137,15 @@ export function ShortenUrlForm({ onSuccess, variant = 'card' }: ShortenUrlFormPr
       const result = await response.json();
       const shortUrl = `${window.location.origin}/${result.shortCode}`;
       setLastResult(shortUrl);
+      setLastShortCode(result.shortCode);
+      setLastExpiresAt(result.expiresAt ?? null);
       
       toast(`Your shortened URL is ready: ${shortUrl}`, {
         description: "URL successfully shortened!",
       });
 
       if (onSuccess) {
-        onSuccess({ shortCode: result.shortCode, url: data.url });
+        onSuccess({ id: result.id, shortCode: result.shortCode, url: data.url, expiresAt: result.expiresAt ?? null });
       }
 
       form.reset();
@@ -338,6 +388,92 @@ export function ShortenUrlForm({ onSuccess, variant = 'card' }: ShortenUrlFormPr
             <div className="mt-3 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-3 shadow-xs">
               <div className="flex-1 truncate font-mono text-sm text-primary">{lastResult}</div>
             </div>
+
+            {variant === 'panel' && (
+              <div className="mt-4 hidden md:grid grid-cols-2 gap-4">
+                <div className="rounded-2xl border border-border bg-card p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-medium">QR code</p>
+                    {qrDataUrl && (
+                      <a
+                        href={qrDataUrl}
+                        download={`qr-${lastShortCode || 'short-link'}.png`}
+                        className="text-xs font-medium text-primary hover:underline"
+                      >
+                        Download
+                      </a>
+                    )}
+                  </div>
+                  <div className="mt-3 flex items-center justify-center rounded-xl border border-border bg-white p-4">
+                    {qrDataUrl ? (
+                      <img src={qrDataUrl} alt="QR code" className="h-40 w-40" />
+                    ) : (
+                      <div className="text-sm text-muted-foreground">Generating…</div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-border bg-card p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-medium">Analytics</p>
+                    {lastShortCode && (
+                      <button
+                        type="button"
+                        onClick={() => fetchStats(lastShortCode)}
+                        className="text-xs font-medium text-primary hover:underline"
+                      >
+                        Refresh
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-2 gap-3">
+                    <div className="rounded-xl border border-border bg-background px-3 py-3">
+                      <p className="text-xs text-muted-foreground">Clicks</p>
+                      <p className="font-display mt-1 text-lg font-semibold tracking-tight">
+                        {stats?.clicks ?? 0}
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-border bg-background px-3 py-3">
+                      <p className="text-xs text-muted-foreground">Expiry</p>
+                      <p className="mt-1 text-sm font-medium">
+                        {lastExpiresAt ? format(new Date(lastExpiresAt), 'PPP') : 'Never'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <p className="text-xs font-medium text-muted-foreground">Recent clicks</p>
+                    <div className="mt-2 space-y-2">
+                      {(stats?.clickEvents ?? []).slice(0, 3).map((e) => {
+                        const refHost = (() => {
+                          if (!e.referrer) return 'Direct';
+                          try {
+                            return new URL(e.referrer).host;
+                          } catch {
+                            return 'Direct';
+                          }
+                        })();
+
+                        return (
+                          <div key={e.id} className="flex items-center justify-between gap-3 rounded-xl border border-border bg-background px-3 py-2">
+                            <p className="truncate text-sm">{refHost}</p>
+                            <p className="shrink-0 text-xs text-muted-foreground">
+                              {formatDistanceToNowStrict(new Date(e.created_at), { addSuffix: true })}
+                            </p>
+                          </div>
+                        );
+                      })}
+                      {(!stats || stats.clickEvents.length === 0) && (
+                        <div className="rounded-xl border border-border bg-background px-3 py-3 text-sm text-muted-foreground">
+                          No clicks yet.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

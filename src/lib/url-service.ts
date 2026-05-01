@@ -1,14 +1,5 @@
 import { nanoid } from 'nanoid';
-import { ShortUrl } from './types';
-
-interface ClickEvent {
-  id: string;
-  short_url_id: string;
-  referrer?: string;
-  user_agent?: string;
-  ip_address?: string;
-  created_at: string;
-}
+import { ClickEvent, ShortUrl } from './types';
 
 // In-memory store for URLs and click events
 // Note: This will reset when the server restarts.
@@ -63,6 +54,29 @@ export async function getShortUrl(code: string): Promise<ShortUrl | null> {
   }
 }
 
+export async function getShortUrlById(id: string): Promise<ShortUrl | null> {
+  try {
+    return urls.get(id) || null;
+  } catch (error) {
+    console.error('Error getting short URL by id:', error);
+    return null;
+  }
+}
+
+export async function getClickEventsForShortUrl(shortUrlId: string, limit: number = 25): Promise<ClickEvent[]> {
+  try {
+    const events = clickEvents
+      .filter((e) => e.short_url_id === shortUrlId)
+      .slice()
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    return events.slice(0, Math.max(0, limit));
+  } catch (error) {
+    console.error('Error getting click events:', error);
+    return [];
+  }
+}
+
 // Record a click event
 export async function recordClick(shortUrlId: string, referrer?: string, userAgent?: string, ipAddress?: string): Promise<void> {
   try {
@@ -77,7 +91,7 @@ export async function recordClick(shortUrlId: string, referrer?: string, userAge
         referrer: referrer || undefined,
         user_agent: userAgent || undefined,
         ip_address: ipAddress || undefined,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       });
     }
   } catch (error) {
