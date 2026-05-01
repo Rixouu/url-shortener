@@ -42,9 +42,15 @@ export default async function RedirectPage({ params }: RouteParams) {
   // This is just a fallback and should never be rendered
   // The TypeScript error is suppressed because we know shortUrl cannot be null at this point
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-2xl font-bold">Redirecting...</h1>
-      <p>If you are not redirected, <a href={shortUrl!.url} className="text-blue-500 hover:underline">click here</a>.</p>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground px-6">
+      <h1 className="font-display text-2xl font-semibold tracking-tight">Redirecting...</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        If you are not redirected,{" "}
+        <a href={shortUrl!.url} className="text-primary hover:underline">
+          click here
+        </a>
+        .
+      </p>
     </div>
   );
 } 

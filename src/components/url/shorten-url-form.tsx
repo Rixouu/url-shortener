@@ -15,7 +15,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
-import { CalendarIcon, Copy, Check } from 'lucide-react';
+import { ArrowRight, CalendarIcon, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const urlFormSchema = z.object({
@@ -31,11 +31,11 @@ type UrlFormValues = z.infer<typeof urlFormSchema>;
 
 interface ShortenUrlFormProps {
   onSuccess?: (data: { shortCode: string; url: string }) => void;
+  variant?: 'card' | 'panel';
 }
 
-export function ShortenUrlForm({ onSuccess }: ShortenUrlFormProps) {
+export function ShortenUrlForm({ onSuccess, variant = 'card' }: ShortenUrlFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const [lastResult, setLastResult] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const router = useRouter();
@@ -113,184 +113,248 @@ export function ShortenUrlForm({ onSuccess }: ShortenUrlFormProps) {
     }
   }
 
-  return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl">Shorten URL</CardTitle>
-        <CardDescription>Enter a long URL to create a shortened version.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+  const content = (
+    <div className={cn(variant === 'panel' ? "w-full" : "w-full max-w-2xl mx-auto")}>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className={cn(variant === 'panel' ? "space-y-5" : "space-y-4")}>
+          <FormField
+            control={form.control}
+            name="url"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className={cn(variant === 'panel' && "text-[11px] tracking-wide text-muted-foreground uppercase")}>
+                  Your long URL
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="https://example.com/your-very-long-url"
+                    className={cn(
+                      variant === 'panel' && "h-11 rounded-xl border-input bg-card px-4 text-[15px] md:text-sm"
+                    )}
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription className={cn(variant === 'panel' && "text-xs")}>
+                  Paste the full URL you want to shorten.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="useCustomCode"
+            render={({ field }) => (
+              <FormItem
+                className={cn(
+                  "flex flex-row items-start space-x-3 space-y-0 rounded-xl border border-input p-4 transition-colors",
+                  variant === 'panel' ? "bg-card hover:bg-secondary/40" : "bg-background"
+                )}
+              >
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className="font-medium">Use custom URL code</FormLabel>
+                  <FormDescription className={cn(variant === 'panel' && "text-xs")}>
+                    Create a custom slug instead of a random one.
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+
+          {form.watch('useCustomCode') && (
             <FormField
               control={form.control}
-              name="url"
+              name="customCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL</FormLabel>
+                  <FormLabel className={cn(variant === 'panel' && "text-[11px] tracking-wide text-muted-foreground uppercase")}>
+                    Custom code
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com/long-url" {...field} />
+                    <Input
+                      placeholder="my-custom-url"
+                      className={cn(
+                        variant === 'panel' && "h-11 rounded-xl border-input bg-card px-4"
+                      )}
+                      {...field}
+                    />
                   </FormControl>
-                  <FormDescription>Enter the URL you want to shorten.</FormDescription>
+                  <FormDescription className={cn(variant === 'panel' && "text-xs")}>
+                    This will create: {window.location.origin}/{field.value || 'my-custom-url'}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+          )}
 
-            <FormField
-              control={form.control}
-              name="useCustomCode"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Use custom URL code</FormLabel>
-                    <FormDescription>
-                      Create a custom short URL instead of a random one.
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
-
-            {form.watch('useCustomCode') && (
-              <FormField
-                control={form.control}
-                name="customCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Custom Code</FormLabel>
-                    <FormControl>
-                      <Input placeholder="my-custom-url" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This will create: {window.location.origin}/{field.value || 'my-custom-url'}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
+          <Accordion type="single" collapsible>
+            <AccordionItem value="advanced-options" className={cn(variant === 'panel' && "border-border")}>
+              <AccordionTrigger
+                className={cn(
+                  variant === 'panel' && "py-3 text-sm font-medium text-foreground/80 hover:no-underline"
                 )}
-              />
-            )}
+              >
+                Advanced options
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className={cn(variant === 'panel' ? "space-y-5 pt-4" : "space-y-4 pt-4")}>
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={cn(variant === 'panel' && "text-[11px] tracking-wide text-muted-foreground uppercase")}>
+                          Title (optional)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="My Website"
+                            className={cn(
+                              variant === 'panel' && "h-11 rounded-xl border-input bg-card px-4"
+                            )}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-            <Accordion type="single" collapsible>
-              <AccordionItem value="advanced-options">
-                <AccordionTrigger onClick={() => setShowAdvanced(!showAdvanced)}>
-                  Advanced Options
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-4 pt-4">
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Title (Optional)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="My Website" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={cn(variant === 'panel' && "text-[11px] tracking-wide text-muted-foreground uppercase")}>
+                          Description (optional)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="A short description..."
+                            className={cn(
+                              variant === 'panel' && "h-11 rounded-xl border-input bg-card px-4"
+                            )}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Description (Optional)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="A short description..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="expiresAt"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Expiration Date (Optional)</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-full pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date < new Date()
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormDescription>
-                            Set an expiration date for this URL (optional).
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Shortening...' : 'Shorten URL'}
-            </Button>
-          </form>
-        </Form>
-
-        {lastResult && (
-          <div className="mt-6 animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Short Link</span>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 px-2 text-primary hover:text-primary/80 hover:bg-primary/10 transition-colors"
-                  onClick={() => copyToClipboard(lastResult)}
-                >
-                  {copied ? <Check className="size-4 mr-2" /> : <Copy className="size-4 mr-2" />}
-                  {copied ? 'Copied' : 'Copy'}
-                </Button>
-              </div>
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm">
-                <div className="flex-1 font-mono text-sm text-primary truncate">
-                  {lastResult}
+                  <FormField
+                    control={form.control}
+                    name="expiresAt"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel className={cn(variant === 'panel' && "text-[11px] tracking-wide text-muted-foreground uppercase")}>
+                          Expiration date (optional)
+                        </FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full pl-3 text-left font-normal",
+                                  variant === 'panel' && "h-11 rounded-xl border-input bg-card px-4",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={(date) =>
+                                date < new Date()
+                              }
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormDescription className={cn(variant === 'panel' && "text-xs")}>
+                          Set an expiration date for this URL (optional).
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
-              </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          <Button
+            type="submit"
+            className={cn(
+              "w-full",
+              variant === 'panel' && "h-11 rounded-xl text-[15px] font-medium"
+            )}
+            disabled={isSubmitting}
+          >
+            <span>{isSubmitting ? 'Shortening...' : 'Shorten URL'}</span>
+            <ArrowRight className="size-4" />
+          </Button>
+        </form>
+      </Form>
+
+      {lastResult && (
+        <div className="mt-6 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className={cn(
+            "rounded-2xl border border-primary/15 bg-primary/5 p-4",
+            variant === 'panel' && "bg-primary/5"
+          )}>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-sm font-medium text-muted-foreground">Short link</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-2 text-primary hover:bg-primary/10"
+                onClick={() => copyToClipboard(lastResult)}
+                type="button"
+              >
+                {copied ? <Check className="size-4 mr-2" /> : <Copy className="size-4 mr-2" />}
+                {copied ? 'Copied' : 'Copy'}
+              </Button>
+            </div>
+            <div className="mt-3 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-3 shadow-xs">
+              <div className="flex-1 truncate font-mono text-sm text-primary">{lastResult}</div>
             </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </div>
+      )}
+    </div>
   );
+
+  if (variant === 'card') {
+    return (
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-display font-semibold tracking-tight">Shorten URL</CardTitle>
+          <CardDescription>Enter a long URL to create a shortened version.</CardDescription>
+        </CardHeader>
+        <CardContent>{content}</CardContent>
+      </Card>
+    );
+  }
+
+  return content;
 } 

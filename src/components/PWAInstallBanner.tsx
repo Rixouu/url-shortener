@@ -21,20 +21,20 @@ export function PWAInstallBanner() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 animate-in fade-in slide-in-from-bottom-8 duration-500">
-      <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl p-4 flex items-center justify-between gap-4">
+      <div className="bg-background/85 backdrop-blur-xl border border-border rounded-2xl shadow-2xl p-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
             <Download size={24} />
           </div>
           <div>
-            <h3 className="font-bold text-zinc-900 dark:text-zinc-100">Install URL Shortener</h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">Add to home screen for the best experience</p>
+            <h3 className="font-semibold text-foreground">Install URL Shortener</h3>
+            <p className="text-xs text-muted-foreground">Add to home screen for the best experience</p>
           </div>
         </div>
         
         <div className="flex items-center gap-2">
           {isIOS ? (
-            <div className="flex flex-col items-center gap-1 text-[10px] text-zinc-500">
+            <div className="flex flex-col items-center gap-1 text-[10px] text-muted-foreground">
               <div className="flex items-center gap-1">
                 <span>Tap</span> <Share size={14} className="text-primary" /> <span>then &quot;Add to Home Screen&quot;</span>
               </div>
@@ -50,7 +50,8 @@ export function PWAInstallBanner() {
           )}
           <button 
             onClick={() => setShowBanner(false)}
-            className="p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+            className="p-1 text-muted-foreground hover:text-foreground"
+            aria-label="Dismiss install banner"
           >
             <X size={18} />
           </button>

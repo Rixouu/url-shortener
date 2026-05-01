@@ -1,0 +1,137 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.scene{background:#F0EBE3;padding:32px 20px;font-family:'Inter',sans-serif;}
+
+.desktop{background:#fff;border-radius:20px;overflow:hidden;display:grid;grid-template-columns:260px minmax(0,1fr);min-height:580px;border:1px solid #E8E0D8;}
+
+.brand-panel{background:#1A0C02;padding:36px 28px;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.brand-glow{position:absolute;top:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:#E8560A;opacity:0.12;}
+.brand-glow2{position:absolute;bottom:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:#E8560A;opacity:0.08;}
+.brand-logo{width:48px;height:48px;border-radius:14px;background:#E8560A;display:flex;align-items:center;justify-content:center;margin-bottom:20px;flex-shrink:0;}
+.brand-logo svg{width:22px;height:22px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;}
+.brand-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#FFFFFF;line-height:1.2;letter-spacing:-0.5px;margin-bottom:8px;}
+.brand-sub{font-size:12px;color:#7A5A40;line-height:1.6;margin-bottom:32px;}
+.feature-list{display:flex;flex-direction:column;gap:14px;margin-bottom:auto;}
+.feature{display:flex;align-items:flex-start;gap:10px;}
+.feat-dot{width:6px;height:6px;border-radius:50%;background:#E8560A;margin-top:5px;flex-shrink:0;}
+.feat-text p{font-size:12px;font-weight:500;color:#E8D8C8;margin-bottom:2px;}
+.feat-text span{font-size:11px;color:#5A3C24;line-height:1.4;}
+.brand-footer{margin-top:32px;padding-top:20px;border-top:1px solid #2A1A0A;}
+.stats-row{display:flex;gap:16px;}
+.stat p{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#E8560A;}
+.stat span{font-size:10px;color:#5A3C24;}
+
+.form-panel{background:#FDFAF7;padding:40px 36px;}
+.form-eyebrow{font-size:10px;font-weight:500;color:#C87040;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+.form-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#1A0C02;letter-spacing:-0.5px;margin-bottom:4px;}
+.form-sub{font-size:13px;color:#9A8070;margin-bottom:28px;line-height:1.5;}
+.field-label{font-size:11px;font-weight:500;color:#6A5040;margin-bottom:6px;letter-spacing:0.03em;}
+.url-input-wrap{display:flex;background:#FFFFFF;border:1.5px solid #E8D8CC;border-radius:10px;overflow:hidden;margin-bottom:6px;}
+.url-prefix{padding:11px 12px;font-size:12px;color:#B09080;background:#FBF5F0;border-right:1.5px solid #E8D8CC;font-family:'Inter',monospace;white-space:nowrap;display:flex;align-items:center;}
+.url-field{flex:1;padding:11px 14px;font-size:13px;color:#3A2010;background:transparent;border:none;outline:none;font-family:'Inter',sans-serif;}
+.field-hint{font-size:11px;color:#B09080;margin-bottom:18px;}
+.custom-row{display:flex;align-items:flex-start;gap:10px;background:#FFFFFF;border:1.5px solid #E8D8CC;border-radius:10px;padding:12px 14px;margin-bottom:18px;cursor:pointer;}
+.custom-check{width:16px;height:16px;border-radius:4px;border:1.5px solid #D0C0B0;flex-shrink:0;margin-top:1px;}
+.custom-text p{font-size:12px;font-weight:500;color:#3A2010;margin-bottom:2px;}
+.custom-text span{font-size:11px;color:#9A8070;}
+.advanced{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid #EEE5DC;border-bottom:1px solid #EEE5DC;margin-bottom:22px;cursor:pointer;}
+.advanced span{font-size:13px;font-weight:500;color:#5A3C24;}
+.advanced svg{width:14px;height:14px;fill:none;stroke:#C87040;stroke-width:2;}
+.adv-tags{display:flex;gap:6px;margin-top:10px;margin-bottom:4px;}
+.adv-tag{font-size:10px;padding:3px 9px;border-radius:20px;background:#FBF0E8;color:#C87040;border:1px solid #F0D8C0;}
+.shorten-btn{width:100%;background:#E8560A;border:none;border-radius:10px;padding:13px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:white;cursor:pointer;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px;}
+.shorten-btn svg{width:15px;height:15px;fill:none;stroke:white;stroke-width:2.5;}
+.features-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;}
+.feat-card{background:#FFFFFF;border:1.5px solid #EEE5DC;border-radius:10px;padding:14px;}
+.feat-card-icon{width:28px;height:28px;border-radius:7px;background:#FBF0E8;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
+.feat-card-icon svg{width:14px;height:14px;fill:none;stroke:#E8560A;stroke-width:2;}
+.feat-card p{font-size:12px;font-weight:500;color:#2A1A0A;margin-bottom:3px;}
+.feat-card span{font-size:11px;color:#9A8070;line-height:1.4;}
+</style>
+
+<div class="scene">
+<div class="desktop">
+
+  <div class="brand-panel">
+    <div class="brand-glow"></div>
+    <div class="brand-glow2"></div>
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+    </div>
+    <div class="brand-title">URL<br>Shortener</div>
+    <div class="brand-sub">Short links, big impact. Premium analytics built in.</div>
+    <div class="feature-list">
+      <div class="feature">
+        <div class="feat-dot"></div>
+        <div class="feat-text"><p>Custom aliases</p><span>Brand every link with your own slug.</span></div>
+      </div>
+      <div class="feature">
+        <div class="feat-dot"></div>
+        <div class="feat-text"><p>Click analytics</p><span>Referrers, devices, locations — all tracked.</span></div>
+      </div>
+      <div class="feature">
+        <div class="feat-dot"></div>
+        <div class="feat-text"><p>Link expiry</p><span>Set links to expire after a date or click count.</span></div>
+      </div>
+      <div class="feature">
+        <div class="feat-dot"></div>
+        <div class="feat-text"><p>QR generation</p><span>Auto-generate QR codes for every link.</span></div>
+      </div>
+    </div>
+    <div class="brand-footer">
+      <div class="stats-row">
+        <div class="stat"><p>2.4M</p><span>Links created</span></div>
+        <div class="stat"><p>99.9%</p><span>Uptime SLA</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-panel">
+    <div class="form-eyebrow">Get started</div>
+    <div class="form-title">Shorten a URL</div>
+    <div class="form-sub">Paste any long URL and get a clean, trackable short link in seconds.</div>
+    <div class="field-label">Your long URL</div>
+    <div class="url-input-wrap">
+      <div class="url-prefix">https://</div>
+      <div class="url-field" style="color:#B09080;">example.com/your-very-long-url-goes-here</div>
+    </div>
+    <div class="field-hint">Paste the full URL you want to shorten.</div>
+    <div class="custom-row">
+      <div class="custom-check"></div>
+      <div class="custom-text">
+        <p>Use custom URL code</p>
+        <span>Create a custom slug instead of a random one.</span>
+      </div>
+    </div>
+    <div class="advanced">
+      <span>Advanced options</span>
+      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="adv-tags">
+      <span class="adv-tag">Link expiry</span>
+      <span class="adv-tag">Password protect</span>
+      <span class="adv-tag">UTM tags</span>
+    </div>
+    <div style="height:14px;"></div>
+    <button class="shorten-btn">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Shorten URL
+    </button>
+    <div class="features-row">
+      <div class="feat-card">
+        <div class="feat-card-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <p>Custom codes</p>
+        <span>Branded links with your own aliases.</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <p>Detailed tracking</p>
+        <span>Clicks, referrers, and audience insights.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
